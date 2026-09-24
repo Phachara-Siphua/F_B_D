@@ -1,0 +1,82 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+# 🌟 1. นำเข้า Database Engine และ Models ของเรา
+from database import engine
+import models
+
+from routes import (
+    programs,
+    program_majors,
+    program_careers,
+    program_approvals,
+    program_instructors,
+    program_development_plans,
+    program_elo_framework,
+    program_ylo,
+    program_learning_topics,
+    program_schedule,
+    program_budget,
+    program_course_category,
+    program_learning_attributes,
+    program_learning_dimension,
+    program_plo,
+    program_plo_tqf_mapping,
+    program_evaluation,
+    program_graduation_criteria,
+    program_faculty_development,
+    program_quality_section,
+    quality_kpi,
+    program_evaluation_process,
+    course,
+    program_semester,
+    program_course,
+    course_instructor,
+    plo_course_mapping
+)
+
+# 🌟 2. สั่งให้ SQLAlchemy สร้างตารางทั้งหมดอัตโนมัติ
+models.Base.metadata.create_all(bind=engine)
+
+app = FastAPI(title="Curriculum API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(programs.router)
+app.include_router(program_majors.router)
+app.include_router(program_careers.router)
+app.include_router(program_approvals.router)
+app.include_router(program_instructors.router)
+app.include_router(program_development_plans.router)
+app.include_router(program_elo_framework.router)
+app.include_router(program_ylo.router)
+app.include_router(program_learning_topics.router)
+app.include_router(program_schedule.router)
+app.include_router(program_budget.income_router)
+app.include_router(program_budget.expense_router)
+app.include_router(program_course_category.router)
+app.include_router(program_learning_attributes.router)
+app.include_router(program_learning_dimension.router)
+app.include_router(program_plo.router)
+app.include_router(program_plo_tqf_mapping.router)
+app.include_router(program_evaluation.router)
+app.include_router(program_graduation_criteria.router)
+app.include_router(program_faculty_development.router)
+app.include_router(program_quality_section.router)
+app.include_router(quality_kpi.router)
+app.include_router(program_evaluation_process.router)
+app.include_router(course.router)
+app.include_router(program_semester.router)
+app.include_router(program_course.router)
+app.include_router(course_instructor.router)
+app.include_router(plo_course_mapping.router)
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
